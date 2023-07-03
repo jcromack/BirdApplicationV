@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        window.addEventListener('load', (event) => {
+            const postId = `<%- post.id%>`
+            const postOwner = `<%- post.username%>`
+            const username = sessionStorage.getItem('username');
+            console.log("slag", postId)
+
+            if (postOwner === username){
+                document.getElementById("edit-post-button").innerText = "Edit Post"
+                document.getElementById('edit-post-button').href = `/editpost?username=${username}&id=${postId}`
+            }
+
+
+        });
+
+    </script>
+    <title>Post Page</title>
+    <link rel="stylesheet" type="text/css" href="/styles/viewpost.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkwedYRGXTBCdFOr27TgeZDEAd5lLv8GY"></script>
+    <script>
+        var map; // declare the map variable globally
+        var latitude = `<%= post.location[1] %>`    ; // Get the latitude value from post.location
+        var longitude = `<%= post.location[0] %>`; // Get the longitude value from post.location
+        function showPosition(position) {
+            var geocoder = new google.maps.Geocoder();
+            var latlng = new google.maps.LatLng(latitude, longitude);
+            // Perform reverse geocoding
+            geocoder.geocode({ location: latlng }, function(results, status) {
+                if (status === "OK") {
+                    if (results[0]) {
+                        var address = results[0].formatted_address;
+                        // create map centered on the user's location
+                        map = new google.maps.Map(document.getElementById('map'), {
+                            center: latlng,
+                            zoom: 12
+                        });
+                        // add marker at user location
+                        var marker = new google.maps.Marker({
+                            position: latlng,
+                            map: map
+                        });
+                    }
+                }
+            });
+        }
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            }
+        }
+        window.addEventListener('load', (event) => {
+            getLocation();
+        });
+    </script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="/scripts/chatroom.js"></script>
+</head>
+<body onload="init()">
+<div class="container">
+    <div>
+
+        <div class="container">
+            <%- include('navbar') %>
+            <div class="post">
+                <div class="left-column_-top">
+                    <div class="user-info">
+                        <h1 class="username" id="post_id"><%= post._id %></h1>
+                        <h2 class="species">Species : <%= post.identification %></h2>
+                        <h3 class="usernamelabel">Your Name:  </h3><h3 class="username" id="user_username"><%= username %></h3>
+                    </div>
+                    <div class="post-content">
+                        <img class="post-image" src="<%= post.image %>" alt="Post Image">
+                    </div>
+                </div>
+                <div class="left-column-bottom">
+                    <div id ="comment-section" class="comment-section">
+                        <div class="comment">
+                            <% for(let i=0; i<chats.length; i++) {%>
+                                <p><%= chats[i].message %></p>
+                            <% }%>
+                        </div>
+                    </div>
+
+                    <div id="input" class="bottom boxed">
+                        <form onsubmit="return false;" style="width: 100%">
+                            <p>
+                                <label for="name"> chat: </label>
+                                <input type="text" id="chat_input" name="chat_input" style="width: 80%">
+                                <button id="chat_send" onclick="sendComment()">Send</button>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+                <div class="right-column-top">
+                    <a id="edit-post-button"></a>
+                    <h3>Location</h3>
+                    <div id="map"></div>
+                    <h3 class="username"><%= username %></h3>
+                    <p class="post-date"><%= post.date_posted %></p>
+                </div>
+                <div class="right-column-bottom">
+                    <h4>Description</h4>
+                    <p class="description"><%= post.description %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

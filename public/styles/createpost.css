@@ -1,0 +1,158 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background: linear-gradient(45deg, #ff0080, #8000ff);
+    animation: gradientAnimation 5s ease infinite;
+}
+
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.post {
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.cancel-button {
+    background-color: transparent;
+    color: #1DA1F2;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.cancel-button:hover {
+    text-decoration: underline;
+}
+
+.post-content {
+    padding: 1rem;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="file"] {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.5rem;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.post-button {
+    background-color: #1DA1F2;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.post-button:hover {
+    background-color: #0E81C8;
+}
+
+.expandable-container .content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+
+.expandable-container.expanded .content {
+    max-height: 500px;
+    overflow-y: auto;
+    background-color: #ffffff;
+}
+
+.cancel-button {
+    background-color: transparent;
+    color: #1DA1F2;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    text-decoration: none; /* Remove underline from anchor element */
+}
+
+.cancel-button:hover {
+    text-decoration: underline;
+}
+
+.cancel-button a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+.search-box {
+    position: relative;
+
+}
+
+.bold {
+    font-weight: bold;
+}
+
+#searchInput {
+    width: 85%;
+    height: 40px;
+    box-sizing: border-box;
+    padding-right: 15%;
+}
+
+#searchBtn {
+    background-color: #1DA1F2;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+
+
+#searchBtn:hover {
+    background-color: #0E81C8;
+}

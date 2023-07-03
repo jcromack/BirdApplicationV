@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuidv4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/styles/login.css">
+</head>
+<body>
+<div class="login_box">
+    <form action="/login" method="POST">
+        <h2>Enter Username</h2>
+        <input id="username" type="text" placeholder="Username" name="username" required>
+        <button type="submit" onclick="setUsernameInSessionStorage()">Login</button>
+    </form>
+
+    <script>
+        const setUsernameInSessionStorage = () => {
+            if (document.getElementById('username').value){
+                sessionStorage.setItem('username', document.getElementById('username').value)
+            }
+
+        }
+    </script>
+</div>
+
+</body>
+</html>

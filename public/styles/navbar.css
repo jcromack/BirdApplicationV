@@ -1,0 +1,278 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background: linear-gradient(45deg, #ff0080, #8000ff);
+    animation: gradientAnimation 5s ease infinite;
+}
+
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.container {
+
+    margin: 0 auto;
+    max-width: 1500px;
+}
+
+
+
+.logo {
+    color: #333;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+input[type="text"] {
+    border: none;
+    border-radius: 4px 0 0 4px;
+    font-size: 1rem;
+    padding: 0.5rem;
+}
+
+.search_bar {
+    align-items: center;
+    display: flex;
+}
+
+
+button {
+    background-color: #1DA1F2;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+button:hover {
+    background-color: #0E81C8;
+}
+
+.create_post_btn {
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #1DA1F2;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+}
+
+.create_post_btn:hover {
+    background-color: #0E81C8;
+}
+
+.post {
+    border-radius: 10px;
+    background-color: #fff;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post_grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    align-items: start;
+}
+
+.post_details {
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
+
+.nav_links {
+    display: flex;
+    align-items: center;
+}
+
+.nav_links a {
+    color: #1DA1F2;
+    text-decoration: none;
+    font-size: 1rem;
+    margin-left: 1rem;
+}
+
+.nav_links a:hover {
+    text-decoration: underline;
+}
+
+.main {
+    margin-top: 2rem;
+}
+
+.post_list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.post_header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.user_image img {
+    width: 150px;
+    height: 150px;
+
+}
+
+.user_details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.post_title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.date_and_time {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+.username {
+    font-size: 0.875rem;
+    color: #333;
+}
+
+.post_content {
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+}
+
+.post-text {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.5;
+}
+
+.search_btn {
+    background-color: #1DA1F2;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0 4px 4px 0;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.search_btn:hover {
+    background-color: #0E81C8;
+}
+
+.navbar {
+    border-radius: 10px;
+    background: linear-gradient(to right, #ff6e7f, #bfe9ff);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 40px;
+    height: 80px;
+}
+
+.logo h1 {
+    margin: 0;
+}
+
+.menu-icon {
+    display: none;
+    cursor: pointer;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+}
+
+.menu li {
+    list-style: none;
+    margin-left: 20px;
+}
+
+.menu a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+@media screen and (max-width: 768px) {
+    .menu {
+        display: none;
+    }
+
+    .menu-icon {
+        display: block;
+    }
+
+    .menu-toggle:checked ~ .menu {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to right, #ff6e7f, #bfe9ff);
+        padding: 10px 20px;
+        border-bottom: 2px solid #fff;
+    }
+
+    .menu-toggle:checked ~ .menu li {
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+
+    .menu-toggle:checked ~ .menu a {
+        color: #fff;
+        font-weight: 500;
+    }
+}
+
+
+
+@media only screen and (max-width: 600px) {
+    .post_grid {
+        grid-template-columns: 1fr;
+    }
+
+    .user_image img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .post_details {
+        grid-template-rows: auto auto;
+    }
+}
+
+.home-link {
+    font-size: 1rem;
+    padding: 5px 10px;
+}
+
+#login_or_out_button {
+    color: black;
+}

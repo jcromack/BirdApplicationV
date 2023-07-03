@@ -1,0 +1,42 @@
+body {
+
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(45deg, #ff0080, #8000ff);
+    animation: gradientAnimation 5s ease infinite;
+}
+
+.login_box {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+input[type="text"], button {
+    margin: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+}
+
+button {
+    background-color: #1da1f2;
+    color: #fff;
+    cursor: pointer;
+}

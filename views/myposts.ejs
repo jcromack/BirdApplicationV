@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Posts</title>
+    <link rel="stylesheet" type="text/css" href="/styles/homepage.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkwedYRGXTBCdFOr27TgeZDEAd5lLv8GY"></script>
+</head>
+<body>
+    <div class="container">
+        <%- include('navbar') %>
+        <div class="main">
+            <h1>My Posts</h1>
+            <br>
+            <br>
+            <div class="post_list">
+                <% posts.forEach(post => { %>
+                    <div class="post">
+                        <div class="post_grid">
+                            <div class="user_image">
+                                <img src="<%= post.image %>" alt="User Image">
+                            </div>
+                            <div class="post_details">
+                                <div class="user_details">
+                                    <a href="./viewpost/<%= post.id%>">
+                                        <h2 class="post_title">Species: <%= post.identification %></h2>
+                                    </a>
+                                    <div class="date_and_time">
+                                        <p class="post_date"><%= post.date_posted %></p>
+                                        <p class="post_time"><%= post.time_posted %></p>
+                                    </div>
+                                    <p class="username">Poster Name: <%= post.username %></p>
+                                </div>
+                                <div class="post_content">
+                                        <p class="post-text">Description: <%= post.description %></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+    </div>
+</body>

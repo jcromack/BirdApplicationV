@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="/styles/homepage.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkwedYRGXTBCdFOr27TgeZDEAd5lLv8GY"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkwedYRGXTBCdFOr27TgeZDEAd5lLv8GY"></script>
+    <script src="/scripts/register_service_worker.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkwedYRGXTBCdFOr27TgeZDEAd5lLv8GY&libraries=geometry"></script>
+    <script>
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = date.getDate();
+            const month = date.toLocaleString('default', { month: 'long' });
+            const year = date.getFullYear();
+            return `Date: ${day} ${month} ${year}`;
+        }
+
+        function handleSorting() {
+            const mostRecentOption = document.getElementById('most-recent-option');
+            const nearestLocationOption = document.getElementById('nearest-location-option');
+
+            // check which option is selected
+            if (mostRecentOption.classList.contains('selected')) {
+                // sort by recent posts
+                const postsContainer = document.querySelector('.post_list');
+                const posts = Array.from(postsContainer.querySelectorAll('.post'));
+
+                // Sort posts on the date and time
+                posts.sort((a, b) => {
+                    const aDateAndTime = a.querySelector('.post_date').textContent.replace('Date: ', '') + ' ' + a.querySelector('.post_time').textContent.replace('Time: ', '');
+                    const bDateAndTime = b.querySelector('.post_date').textContent.replace('Date: ', '') + ' ' + b.querySelector('.post_time').textContent.replace('Time: ', '');
+                    return new Date(bDateAndTime) - new Date(aDateAndTime);
+                });
+
+
+                postsContainer.innerHTML = '';
+
+                // add sorted posts back to the container
+                posts.forEach(post => {
+                    postsContainer.appendChild(post);
+                });
+            } else if (nearestLocationOption.classList.contains('selected')) {
+                // Sort by nearest posts using lat and long
+
+                console.log('Sorting by nearest location');
+                function getLocation(callback) {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            function(position) {
+                                const latitude = position.coords.latitude;
+                                const longitude = position.coords.longitude;
+                                callback([latitude, longitude]);
+                            },
+                            function(error) {
+                                console.log("Error getting location:", error);
+                                callback(null, error);
+                            }
+                        );
+                    } else {
+                        console.error("Geolocation is not supported by this browser.");
+                        callback(null, new Error("Geolocation is not supported by this browser."));
+                    }
+                }
+                getLocation(function(coordinates, error) {
+                    if (error) {
+                        console.error("Error getting location:", error);
+                    } else {
+                        console.log("Current position:", coordinates[0], coordinates[1]);
+
+                        const currentLatitude = coordinates[0];
+                        const currentLongitude = coordinates[1];
+
+                        const postsContainer = document.querySelector('.post_list');
+                        const posts = Array.from(postsContainer.querySelectorAll('.post'));
+
+                        //using google maps api
+                        // function calculating the distance between two latitude and longitude coordinates using Google Maps' API
+                        function calculateDistance(lat1, lon1, lat2, lon2) {
+                            const firstPosition = new google.maps.LatLng(lat1, lon1);
+                            const secondPosition = new google.maps.LatLng(lat2, lon2);
+
+                            const distance = google.maps.geometry.spherical.computeDistanceBetween(firstPosition, secondPosition) / 1000; // Distance in kilometers
+                            console.log(`Distance: ${distance} km`);
+                            return distance;
+                        }
+                        // Sorting posts based on the distance from the current latitude and longitude
+                        posts.sort((a, b) => {
+                            const currentLat = currentLatitude; // Assign the current lat value to currentLat
+                            const currentLon = currentLongitude; // Assign the current long value to currentLon
+
+                            const aLatitude = parseFloat(a.querySelector('.post_lat').textContent);
+                            const aLongitude = parseFloat(a.querySelector('.post_long').textContent);
+                            const bLatitude = parseFloat(b.querySelector('.post_lat').textContent);
+                            const bLongitude = parseFloat(b.querySelector('.post_long').textContent);
+
+                            const distanceA = calculateDistance(currentLat, currentLon, aLatitude, aLongitude);
+                            const distanceB = calculateDistance(currentLat, currentLon, bLatitude, bLongitude);
+
+                            return distanceA - distanceB;
+                        });
+
+                        postsContainer.innerHTML = '';
+
+                        // add sorted posts back to the container
+                        posts.forEach(post => {
+                            postsContainer.appendChild(post);
+                        });
+
+                    }
+                });
+
+
+
+
+            }
+        }
+
+        function onlyShowUnidentifiedPosts(onlyShowUnidentified) {
+            const postsContainer = document.querySelector('.post_list');
+            const posts = Array.from(postsContainer.querySelectorAll('.post'));
+
+            posts.forEach((post) => {
+                const identification = post.querySelector('.post_title').textContent.replace('Species : ', '');
+
+                if (onlyShowUnidentified && identification !== 'Unidentified') {
+                    post.style.display = 'none'; // remove post if not unidentifed
+                } else {
+                    post.style.display = 'block'; // show post
+                }
+            });
+        }
+        // event listeners which handle option selection
+        document.addEventListener('DOMContentLoaded', () => {
+            const mostRecentOption = document.getElementById('most-recent-option');
+            const nearestLocationOption = document.getElementById('nearest-location-option');
+            const onlyShowUnidentifiedOption = document.getElementById('show-only-unidentified');
+
+            mostRecentOption.addEventListener('click', () => {
+                mostRecentOption.classList.add('selected');
+                nearestLocationOption.classList.remove('selected');
+                handleSorting();
+            });
+            nearestLocationOption.addEventListener('click', () => {
+                nearestLocationOption.classList.add('selected');
+                mostRecentOption.classList.remove('selected');
+                handleSorting();
+            });
+            onlyShowUnidentifiedOption.addEventListener('click', () => {
+                if (onlyShowUnidentifiedOption.checked){
+                    onlyShowUnidentifiedPosts(true)
+                }else {
+                    onlyShowUnidentifiedPosts(false)
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <%- include('navbar') %>
+        <div class="header">
+        </div>
+        <div class="main">
+            <h1>Home</h1>
+            <br>
+            <div class="search-and-dropdown">
+                <div class="options">
+                    <a class="checkbox-option">
+                        <input type="checkbox" id="show-only-unidentified" name="show-only-unidentified">
+                        <label for="least-popular">Unindentified</label>
+                    </a>
+                    <div class="dropdown">
+                        <button class="dropbtn">Sort/Filter</button>
+                        <div class="dropdown-content">
+                            <a id="most-recent-option" href="#">Most recent</a>
+                            <a id="nearest-location-option" href="#">Nearest Location</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="post_list">
+                <% posts.forEach(post => { %>
+                    <div class="post">
+                        <div class="post_grid">
+                            <div class="user_image">
+                                <img src="<%= post.image %>" alt="User Image" class="crop-image">
+                            </div>
+                            <div class="post_details">
+                                <div class="user_details">
+                                    <a href="./viewpost/<%= post.id %>?username=<%= username %>">
+                                    <h2 class="post_title">Species : <%= post.identification %></h2>
+                                    </a>
+                                    <div class="date_and_time">
+                                        <p class="post_date" id="post_date"><script>document.write(formatDate('<%= post.date_posted %>'));</script></p>
+                                        <p class="post_time">Time: <%= post.time_posted %></p>
+                                    </div>
+                                    <p class="post-text">Description: <%= post.description %></p>
+                                </div>
+                                <div class="post_content">
+                                    <p class="username">Poster Name: <%= post.username %></p>
+                                </div>
+                                <div class="post_lat_long">
+                                    <p class="post_lat" id="post_lat"><%= post.location[1] %></p>
+                                    <p class="post_long" id="post_long"><%= post.location[0] %></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+    </div>
+</body>

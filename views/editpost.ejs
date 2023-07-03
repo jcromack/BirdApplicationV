@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Post</title>
+    <link rel="stylesheet" type="text/css" href="/styles/createpost.css">
+    <script src="/javascripts/add.js"></script>
+
+</head>
+<body id="edit-post-body">
+
+<div class="container">
+    <div class="post">
+        <div class="post-header">
+            <h2 class="page-title">Edit Post</h2>
+            <button class="cancel-button" ><a href="/home?username=<%= username %>">Cancel</a></button>
+        </div>
+        <div class="post-content">
+            <div class="form-container">
+                <form id="xForm" method="POST" action="/editpost">
+                    <input type="hidden" name="id" id="hiddenIdField" value="">
+                    <input type="hidden" name="username" id="username" value="<%= username %>">
+                    <p><label for='identification' id="identifLabel">Identification:</label>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Enter a bird type">
+                        <button type="button" onclick="searchBirdsTable()" id="searchBtn">Search</button>
+                    </div>
+                    <div class="expandable-container">
+                        <div class="content">
+                            <table id="dataTable">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <input type="hidden" id="latitude" name="latitude">
+                    <input type="hidden" id="longitude" name="longitude">
+                    <input type="hidden" id="identification" name="identification">
+                    <input type="hidden" id="description" name="description">
+                    <input class="edit-button" type="submit" name="g" value="Post" id="g">
+                </form>
+                <label id="messageLabel"></label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>if (!sessionStorage.getItem("username")) {
+        document.getElementById("edit-post-body").innerHTML = '<h1>You must be logged in to edit a post!</h1> <a id="login_or_out_button" href="/">Login</a>'
+    }
+</script>
+
+<script>
+    var button = document.querySelector('.toggle-button');
+    button.addEventListener('click', function() {
+        var container = this.parentNode;
+        if (container.classList.contains('expanded')) {
+            container.classList.remove('expanded');
+        } else {
+            container.classList.add('expanded');
+        }
+    });
+
+
+    async function searchBirdsTable() {
+        const birdType = document.getElementById("searchInput").value.toLowerCase();
+
+        const url = 'http://dbpedia.org/sparql';
+
+        const query = `PREFIX dbo: <http://dbpedia.org/ontology/>
+                              PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+                              SELECT ?birdLabel ?birdDescription
+                              WHERE {
+                                ?bird a dbo:Bird ;
+                                  rdfs:label ?birdLabel ;
+                                  rdfs:comment ?birdDescription .
+                                FILTER(LANG(?birdLabel) = 'en' && LANG(?birdDescription) = 'en')
+                                FILTER(CONTAINS(LCASE(?birdLabel), "${birdType}"))
+                              }`;
+
+        const encodedQuery = encodeURIComponent(query);
+        const fullUrl = `${url}?query=${encodedQuery}&format=json`;
+
+        try {
+            const response = await fetch(fullUrl);
+            const data = await response.json();
+
+            const tableBody = document.getElementById("dataTable").getElementsByTagName("tbody")[0];
+
+            // Clear previous results
+            tableBody.innerHTML = "";
+
+            // Iterate search results and populate table
+            data.results.bindings.forEach((result) => {
+                const birdLabel = result.birdLabel.value;
+                const birdDescription = result.birdDescription.value;
+
+                const newRow = tableBody.insertRow();
+                const labelCell = newRow.insertCell();
+                const descriptionCell = newRow.insertCell();
+
+                // Set values
+                labelCell.textContent = birdLabel;
+                descriptionCell.textContent = birdDescription;
+
+
+                labelCell.style.cursor = 'pointer';
+                labelCell.style.color = 'blue';
+
+                labelCell.onclick = function() {
+                    container = document.querySelector('.expandable-container').classList.remove('expanded');
+                    // Check if boolean for unknown Firs assign the variable to '' , then assign them to the correct values
+                    console.log(birdLabel);
+                    document.getElementById('identification').value = birdLabel;
+                    document.getElementById("searchInput").value = birdLabel;
+                    document.getElementById('description').value = birdDescription;
+                };
+
+            });
+            var container = document.querySelector('.expandable-container');
+            container.classList.add('expanded');
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    }</script>
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(getLatLong, handleError);
+        } else {
+            console.error("Geolocation is not supported by this browser.");
+        }
+    }
+    function getLatLong(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        // Set the latitude and longitude values in hidden input fields
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('username');
+        const postId = urlParams.get('id');
+        document.getElementById("username").value = username
+        document.getElementById("hiddenIdField").value = postId
+        document.getElementById("latitude").value = latitude;
+        document.getElementById("longitude").value = longitude;
+    }
+
+    function handleError(error) {
+        console.error("Error getting location: ", error);
+    }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", getLocation);
+</script>
+
+
+</body>
+</html>
+
+
+

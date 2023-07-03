@@ -1,0 +1,32 @@
+<!-- navbar.ejs -->
+<link rel="stylesheet" type="text/css" href="/styles/navbar.css">
+<div class="navbar">
+    <a class="logo">Bird Watching App</a>
+
+    <div>
+        <h1>Welcome <span id="display_username"></span>!</h1>
+    </div>
+    <label for="menu-toggle" class="menu-icon"><span></span></label>
+    <script>
+        const userIsLoggedIn = sessionStorage.getItem('username') === null ? false : true
+        const username = sessionStorage.getItem('username');
+
+        window.addEventListener('load', (event) => {
+            document.getElementById('display_username').textContent = username;
+            document.getElementById('home').href = `/home?username=${username}`
+            document.getElementById('create-post-button').href = `/createpost?username=${username}`
+            document.getElementById('my-posts-button').href = `/myposts?username=${username}`
+        });
+
+        userIsLoggedIn ? document.getElementById('login_or_out_button').textContent = "Logout" : document.getElementById('login_or_out_button').textContent = "Login"
+    </script>
+
+    <ul class="menu">
+        <li><a class="logo home-link" id="home">Home</a></li>
+        <li><a id="create-post-button">Create Post</a></li>
+        <li><a id="my-posts-button"><button class="nav_links">My Posts</button></a></li>
+
+        <li><a id="login_or_out_button" href="/" onclick="sessionStorage.removeItem('username')">Logout</a></li>
+    </ul>
+
+</div>
