@@ -26,7 +26,6 @@ const upload = multer({ dest: 'uploads/' });
 
 app.use('/', indexRouter)
 
-mongoose.connect('mongodb+srv://jcromack:mrw3n3Lbcl5oo0VM@cluster0.yswcqg6.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 //end
